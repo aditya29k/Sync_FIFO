@@ -29,17 +29,17 @@ module sync_fifo(
       wr_ptr <= 0;
       rd_ptr <= 0;
       data_out <= 0;
-      for(i=0; i<`PTR_WIDTH; i=i+1) begin
+      for(i=0; i<`DEPTH; i=i+1) begin
         fifo[i] <= 0;
       end
     end
     else begin
       if(wr_en&&!full) begin
-        fifo[wr_ptr] <= data_in;
-        wr_ptr <= wr_ptr + 1;
+        fifo[wr_ptr[`PTR_WIDTH-1:0]] <= data_in;
+        wr_ptr<= wr_ptr+ 1;
       end
-      else if(rd_en&&!empty) begin
-        data_out <= fifo[rd_ptr];
+      if(rd_en&&!empty) begin
+        data_out <= fifo[rd_ptr[`PTR_WIDTH-1:0]];
         rd_ptr <= rd_ptr + 1;
       end
     end
